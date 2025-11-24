@@ -1,3 +1,10 @@
+pip install SpeechRecognition pyaudio
+# or 
+#pip install pipwin
+#pipwin install pyaudio
+
+
+
 import speech_recognition as sr
 import tkinter as tk
 
