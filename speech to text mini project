@@ -1,0 +1,60 @@
+import speech_recognition as sr
+import tkinter as tk
+
+# --------------------------
+# SPEECH TO TEXT FUNCTION
+# --------------------------
+def speech_to_text():
+    recognizer = sr.Recognizer()
+
+    with sr.Microphone() as source:
+        print("🎤 Speak something…")
+        recognizer.adjust_for_ambient_noise(source)
+        audio = recognizer.listen(source)
+
+    try:
+        print("\n⏳ Converting speech to text…")
+        text = recognizer.recognize_google(audio)
+        print("✔ You said:", text)
+
+        # Save to file
+        with open("output.txt", "w", encoding="utf-8") as f:
+            f.write(text)
+
+        print("📄 Text saved to output.txt")
+        return text
+
+    except sr.UnknownValueError:
+        print("❌ Could not understand audio.")
+        return "Could not understand audio."
+    except sr.RequestError:
+        print("❌ Could not request results from API.")
+        return "API request failed."
+
+
+# --------------------------
+# GUI HANDLER
+# --------------------------
+def gui_record():
+    text_output.insert(tk.END, "🎤 Listening...\n")
+    text = speech_to_text()
+    text_output.insert(tk.END, "✔ You said: " + text + "\n\n")
+
+
+# --------------------------
+# GUI SETUP
+# --------------------------
+root = tk.Tk()
+root.title("Speech to Text - Mini Project")
+root.geometry("500x350")
+
+label = tk.Label(root, text="Speech to Text Converter", font=("Arial", 16))
+label.pack(pady=10)
+
+btn = tk.Button(root, text="🎙 Start Recording", font=("Arial", 14), command=gui_record)
+btn.pack(pady=10)
+
+text_output = tk.Text(root, height=10, width=60, font=("Arial", 12))
+text_output.pack(pady=10)
+
+root.mainloop()
